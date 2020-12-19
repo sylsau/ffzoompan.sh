@@ -1,5 +1,5 @@
 ffzoompan.sh v20201217
-    Creates a zoom effect into the center of the image.
+    Takes an image or a video and creates a video with a zoom effect into the center of the picture.
 
 REQUIREMENTS
     ffmpeg, file, bc

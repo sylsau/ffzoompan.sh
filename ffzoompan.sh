@@ -36,7 +36,7 @@ fn_say() {
 fn_help() {
     cat << EOF
 $PROGNAME v20201217
-    Creates a zoom effect into the center of the image.
+    Takes an image or a video and creates a video with a zoom effect into the center of the picture.
 
 REQUIREMENTS
     ffmpeg, file, bc
@@ -127,11 +127,11 @@ LENGTH=$( echo "$DURATION * 100" | bc )
 # NB: the filter "scale=..." upscales the video before zooming, otherwise we get bad results
 fn_is_img "$INFILE"
 if [[ "$RES" = "1" ]]; then
-    $FFMPEG -framerate 25 -loop 1 -i "$INFILE" -vf "scale=(iw*$ZOOMMAX):(ih*$ZOOMMAX), 
+    $FFMPEG -framerate 25 -loop 1 -i "$INFILE" -vf "scale=(iw*$ZOOMMAX*2):(ih*$ZOOMMAX*2), 
         zoompan=z='min(pzoom+($ZOOMMAX-1)/$LENGTH,$ZOOMMAX)':d=1:x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':fps=25:s=$OUTSIZE" \
         -t $DURATION -crf:v $CRF -y "$OUTFILE"
 else
-    $FFMPEG                       -i "$INFILE" -vf "scale=(iw*$ZOOMMAX):(ih*$ZOOMMAX), 
+    $FFMPEG                       -i "$INFILE" -vf "scale=(iw*$ZOOMMAX*2):(ih*$ZOOMMAX*2), 
         zoompan=z='min(pzoom+($ZOOMMAX-1)/$LENGTH,$ZOOMMAX)':d=1:x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':fps=25:s=$OUTSIZE"  \
         -t $DURATION -crf:v $CRF -c:a copy -y "$OUTFILE"
 fi
