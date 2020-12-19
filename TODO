@@ -1,0 +1,4 @@
+* at the end of zoompan filter parameters, set size to the original size of input file using :
+  s=(iw/ZOOMMAX/2)x(ih/ZOOMMAX/2)
+    => might not work because iw and ih not allowed in size parameters!
+* detect dimensions of input file with `file` so we can properly set OUTSIZE before launching the ffmpeg command 
