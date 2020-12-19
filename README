@@ -1,0 +1,26 @@
+ffzoompan.sh v20201217
+    Creates a zoom effect into the center of the image.
+
+REQUIREMENTS
+    ffmpeg, file, bc
+
+USAGE
+    ffzoompan.sh -i INPUT_FILE [-o OUTPUT_FILE -t DURATION -q CRF -z MAX_ZOOM -s SIZE]
+
+OPTIONS AND ARGUMENTS
+    INPUT_FILE      path to input file
+    OUTPUT_FILE     path to output file [default: /tmp/ffzoompan-out.mp4]
+    DURATION        duration of the output video (in seconds) [default: 20]
+    CRF             quality of the output video (constant rate factor) [default: 12]
+    MAX_ZOOM        zoom value at the end of output video (eg. 2 => x2) [default: 2]
+    SIZE            size of output video (WIDTHxHEIGHT) [default: 1080x1920]
+
+EXAMPLE
+        $ ffzoompan.sh -i myvid.avi -o finalvid.mp4 -q 15 -t 5 -z 1.5 -r 30 -s 1974x2554
+        $ ffzoompan.sh -i pic.jpg   -o newvid.mp4   -q 15 -t 5 -z 1.5 -r 30 -s 1974x2554
+
+AUTHOR
+    Written by Sylvain Saubier (<http://sylsau.com>)
+
+REPORTING BUGS
+    Mail at: <feedback@sylsau.com>
