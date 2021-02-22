@@ -13,6 +13,7 @@ DURATION=20
 CRF=12
 ZOOMMAX=2
 OUTSIZE="1080x1920"
+FF_OPTS=
 
 
 # $1 = command to test (string)
@@ -42,7 +43,7 @@ REQUIREMENTS
     ffmpeg, file, bc
 
 USAGE
-    $PROGNAME -i INPUT_FILE [-o OUTPUT_FILE -t DURATION -q CRF -z MAX_ZOOM -s SIZE]
+    $PROGNAME -i INPUT_FILE [-o OUTPUT_FILE -t DURATION -q CRF -z MAX_ZOOM -s SIZE -a FF_OPTS]
 
 OPTIONS AND ARGUMENTS
     INPUT_FILE      path to input file
@@ -51,10 +52,11 @@ OPTIONS AND ARGUMENTS
     CRF             quality of the output video (constant rate factor) [default: $CRF]
     MAX_ZOOM        zoom value at the end of output video (eg. 2 => x2) [default: $ZOOMMAX]
     SIZE            size of output video (WIDTHxHEIGHT) [default: $OUTSIZE]
+    FF_OPTS         other ffmpeg options to pass to the command
 
 EXAMPLE
         $ $PROGNAME -i myvid.avi -o finalvid.mp4 -q 15 -t 5 -z 1.5 -r 30 -s 1974x2554
-        $ $PROGNAME -i pic.jpg   -o newvid.mp4   -q 15 -t 5 -z 1.5 -r 30 -s 1974x2554
+        $ $PROGNAME -i pic.jpg   -o newvid.mp4   -q 15 -t 5 -z 1.5 -r 30 -s 1974x2554 -a "-pix_fmt yuv420p"
 
 AUTHOR
     Written by Sylvain Saubier (<http://sylsau.com>)
@@ -104,6 +106,10 @@ else
                 OUTSIZE="$2"
                 shift
                 ;;
+            "-a")
+                FF_OPTS="$2"
+                shift
+                ;;
             "--debug")
                 FFMPEG="echo $FFMPEG"
                 ;;
@@ -129,11 +135,11 @@ fn_is_img "$INFILE"
 if [[ "$RES" = "1" ]]; then
     $FFMPEG -framerate 25 -loop 1 -i "$INFILE" -vf "scale=(iw*$ZOOMMAX*2):(ih*$ZOOMMAX*2), 
         zoompan=z='min(pzoom+($ZOOMMAX-1)/$LENGTH,$ZOOMMAX)':d=1:x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':fps=25:s=$OUTSIZE" \
-        -t $DURATION -crf:v $CRF -y "$OUTFILE"
+        -t $DURATION -crf:v $CRF $FF_OPTS -y "$OUTFILE"
 else
     $FFMPEG                       -i "$INFILE" -vf "scale=(iw*$ZOOMMAX*2):(ih*$ZOOMMAX*2), 
         zoompan=z='min(pzoom+($ZOOMMAX-1)/$LENGTH,$ZOOMMAX)':d=1:x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':fps=25:s=$OUTSIZE"  \
-        -t $DURATION -crf:v $CRF -c:a copy -y "$OUTFILE"
+        -t $DURATION -crf:v $CRF -c:a copy $FF_OPTS -y "$OUTFILE"
 fi
 
 fn_say "output to $OUTFILE"
